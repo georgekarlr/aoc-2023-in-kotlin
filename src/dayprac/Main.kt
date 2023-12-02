@@ -45,7 +45,15 @@ fun main() {
     println(result2 - result3)
     println("Minus: result3 - result2")
     println(result3 - result2)
+    val digitMap = (1..9).groupBy { it }.mapKeys { it.key.toString() }.mapValues { it.value.first() } +
+            ("one,two,three,four,five,six,seven,eight,nine").split(",")
+                .mapIndexed { index, value -> value to index + 1 }.toMap()
 
+    val result4 = file.sumOf { line ->
+        val matched = Regex("""(?=(\d|eight|one|two|three|four|five|six|seven|nine))""").findAll(line).toList()
+        (digitMap[matched.first().groups[1]!!.value]!! * 10 + digitMap[matched.last().groups[1]!!.value]!!).toInt()
+    }
+    println(result4)
 }
 
 fun regexWordNumber(text: String): Int {
@@ -57,29 +65,24 @@ fun regexWordNumber(text: String): Int {
     } else {
         "${numbers.first()}${numbers.last()}".toInt()
     }
+
 }
 
-fun getNumberFromWord(text: String): Int {
-    return when (text) {
-        "one" -> 1
-        "two" -> 2
-        "three" -> 3
-        "four" -> 4
-        "five" -> 5
-        "six" -> 6
-        "seven" -> 7
-        "eight" -> 8
-        "1" -> 1
-        "2" -> 2
-        "3" -> 3
-        "4" -> 4
-        "5" -> 5
-        "6" -> 6
-        "7" -> 7
-        "8" -> 8
+//my solution
+val digitMap = mapOf(
+    "one" to 1,
+    "two" to 2,
+    "three" to 3,
+    "four" to 4,
+    "five" to 5,
+    "six" to 6,
+    "seven" to 7,
+    "eight" to 8,
+    "nine" to 9,
+) + (1..9).associateBy { it.toString() }
 
-        else -> 9
-    }
+fun getNumberFromWord(text: String): Int {
+    return digitMap[text] ?: 9
 }
 
 //fun getNumber(text: String): Int {
